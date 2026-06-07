@@ -8,6 +8,9 @@ const computeCards = (items) => {
 </article>
 `;
   })
+  if(!result){
+    result = '<p>No results found.</p>'
+  }
   return result;
 }
 

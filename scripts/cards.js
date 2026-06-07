@@ -1,4 +1,7 @@
 const computeCards = (items) => {
+  if(null === items){
+    return '';
+  }
   let result = '';
   items.map( (item) => {
   result += `

@@ -13,7 +13,7 @@ export const performSearch = (users_spi, searchTerm, isUserSelected) => {
 
   errorMessage && setErrorMessage('');
 
-  setCards(cardsElement, []);
+  setCards(cardsElement, null);
   setLoadingState(true);
 
   const typeQuery = isUserSelected ? '+type:user' : '+type:org';
@@ -28,10 +28,6 @@ export const performSearch = (users_spi, searchTerm, isUserSelected) => {
   .then((data) => setCards(cardsElement, data.items))  // data is an object -> data.items is an array
   .catch(error => console.log(error))
   .finally(() => setLoadingState(false))
-
-  // fetch(`${USERS_API}${searchTerm}${typeQuery}`)
-  // .then((result) => result.json())  // 
-  // .then((response) => setSearchResult(response.items))
 }
 
 export default performSearch;

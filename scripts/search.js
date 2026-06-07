@@ -3,7 +3,7 @@ import { cardsElement } from './elements';
 import { getErrorMessage, setErrorMessage } from './messages';
 import setLoadingState from './loader';
 
-export const performSearch = (users_spi, searchTerm, isUserSelected) => {
+export const performSearch = async (users_spi, searchTerm, isUserSelected) => {
   // avoid updating state when the value wouldn't change. -> expensive
   const errorMessage = getErrorMessage();
   if(!searchTerm.trim()){ // remove spaces
@@ -18,16 +18,34 @@ export const performSearch = (users_spi, searchTerm, isUserSelected) => {
 
   const typeQuery = isUserSelected ? '+type:user' : '+type:org';
 
-  fetch(`${users_spi}${searchTerm}${typeQuery}`)
-  .then((response) => {
-    if(response.ok){
-      return response.json(); // returns a promise
+  try
+  {
+    const response = await fetch(`${users_spi}${searchTerm}${typeQuery}`);
+    if(!response.ok){
+      throw new Error('Network response was not ok');
     }
-    throw new Error('Network response was not ok');
-  })  // 
-  .then((data) => setCards(cardsElement, data.items))  // data is an object -> data.items is an array
-  .catch(error => console.log(error))
-  .finally(() => setLoadingState(false))
+    const data = await response.json();
+    setCards(cardsElement, data.items);
+  }
+  catch(error)
+  {
+    console.log(error);
+  }
+  finally
+  {
+    setLoadingState(false);
+  }
+
+  // fetch(`${users_spi}${searchTerm}${typeQuery}`)
+  // .then((response) => {
+  //   if(response.ok){
+  //     return response.json(); // returns a promise
+  //   }
+  //   throw new Error('Network response was not ok');
+  // })  // 
+  // .then((data) => setCards(cardsElement, data.items))  // data is an object -> data.items is an array
+  // .catch(error => console.log(error))
+  // .finally(() => setLoadingState(false))
 }
 
 export default performSearch;

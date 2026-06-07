@@ -1,5 +1,4 @@
 const computeCards = (items) => {
-  console.log('setSearchResult: ', items);
   let result = '';
   items.map( (item) => {
   result += `

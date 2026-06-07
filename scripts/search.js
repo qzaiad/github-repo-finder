@@ -1,6 +1,7 @@
 import setCards from './cards';
 import { cardsElement } from './elements';
 import { getErrorMessage, setErrorMessage } from './messages';
+import setLoadingState from './loader';
 
 export const performSearch = (users_spi, searchTerm, isUserSelected) => {
   // avoid updating state when the value wouldn't change. -> expensive
@@ -11,6 +12,10 @@ export const performSearch = (users_spi, searchTerm, isUserSelected) => {
   }
 
   errorMessage && setErrorMessage('');
+
+  setCards(cardsElement, []);
+  setLoadingState(true);
+
   const typeQuery = isUserSelected ? '+type:user' : '+type:org';
 
   fetch(`${users_spi}${searchTerm}${typeQuery}`)
@@ -22,6 +27,7 @@ export const performSearch = (users_spi, searchTerm, isUserSelected) => {
   })  // 
   .then((data) => setCards(cardsElement, data.items))  // data is an object -> data.items is an array
   .catch(error => console.log(error))
+  .finally(() => setLoadingState(false))
 
   // fetch(`${USERS_API}${searchTerm}${typeQuery}`)
   // .then((result) => result.json())  // 

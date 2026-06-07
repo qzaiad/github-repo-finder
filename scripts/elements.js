@@ -8,3 +8,5 @@ export const userInputElemet = document.querySelector('input[value="users"]');
 
 export const messageElement = document.querySelector('.message');
 
+export const loaderElement = document.querySelector('.loader');
+

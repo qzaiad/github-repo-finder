@@ -145,6 +145,27 @@ body {
   max-width: 100%;
 }
 
+/*
+ * will-change: transform is a performance hint to the browser ? it tells the browser "this element is going to be animated via transform", so the browser can prepare optimizations before the animation starts.
+ * 
+ * What the browser does with that hint:
+ * 
+ * Promotes the element to its own compositor layer (like its own separate layer in GPU memory)
+ * So when the spin animation runs, the GPU handles it independently ? without having to repaint the rest of the page on every frame
+ * 
+ * Without will-change:
+ * The browser figures out the optimization on its own, but slightly late ? you might see a brief stutter when the animation first starts.
+ * With will-change: transform:
+ * The browser sets up the GPU layer in advance ? smoother animation from frame one.
+ * 
+ * In your case specifically ? a spinner is a perfect use case because:
+ * 
+ * It animates constantly (infinite)
+ * It only uses transform (rotation via spin keyframes)
+ * It's a small isolated element ? promoting it to its own layer has no downside
+ * 
+ * One caution: Don't overuse it. If you put will-change: transform on many elements "just in case", you waste GPU memory. Use it only where you actually have an animation.
+ */
 .loader {
   text-align: center;
   margin-top: var(--margin-after-form);
@@ -158,7 +179,7 @@ body {
     height: 3rem;
     width: 3rem;
     will-change: transform;
-    animation: 1s linear infinite spin;
+    animation: 1s linear infinite spin; // spin is anumation name => see keyframe
   }
 }
 
